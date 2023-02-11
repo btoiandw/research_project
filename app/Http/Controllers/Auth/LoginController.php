@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class LoginController extends Controller
 {
@@ -43,7 +44,20 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         //dd($request->all());
-
+        $roles = [
+            [
+                'name' => 'admin'
+            ],
+            [
+                'name' => 'user'
+            ],
+            [
+                'name' => 'director'
+            ]
+        ];
+        foreach ($roles as $key => $item) {
+            Role::create($item);
+        }
         if ($request->username != "" && $request->password != "") {
             $username = $request->username;
             $password = $request->password;
@@ -55,9 +69,9 @@ class LoginController extends Controller
                 return 'admin';
             } elseif ($user != null && $admin == null && $director != null) {
                 return 'user and director';
-            }elseif ($user == null && $admin == null && $director != null) {
+            } elseif ($user == null && $admin == null && $director != null) {
                 return 'director';
-            }elseif ($user != null && $admin == null && $director == null) {
+            } elseif ($user != null && $admin == null && $director == null) {
                 return 'user';
             }
 
