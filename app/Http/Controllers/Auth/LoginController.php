@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -36,5 +38,35 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function login(Request $request)
+    {
+        //dd($request->all());
+
+        if ($request->username != "" && $request->password != "") {
+            $username = $request->username;
+            $password = $request->password;
+
+            $admin = DB::table('tb_admins')->where('username', '=', $username)->where('status_workadmin', '=', '1')->first();
+            $director = DB::table('tb_directors')->where('username', '=', $username)->where('work_status', '=', '1')->first();
+            $user = DB::table('users')->where('username', '=', $username)->where('work_status', '=', '1')->first();
+            if ($user != null && $admin != null && $director == null) {
+                return 'admin';
+            } elseif ($user != null && $admin == null && $director != null) {
+                return 'user and director';
+            }elseif ($user == null && $admin == null && $director != null) {
+                return 'director';
+            }elseif ($user != null && $admin == null && $director == null) {
+                return 'user';
+            }
+
+
+            return response()->json([
+                'admin' => $admin,
+                'director' => $director,
+                'user' => $user
+            ]);
+        }
     }
 }

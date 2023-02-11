@@ -1,73 +1,68 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>RDI-KPRU</title>
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+    <!-- Scripts -->
+    <link rel="stylesheet" href="resources/sass/app.scss">
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+</head>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+<body>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <div class="contact-form">
+        <div class="d-grid d-md-flex justify-content-md-center">
+            <img alt="" class="avatar" src="{{ asset('img/logo-kpru.png') }}">
+            <h5>Research and Development Institute</h5>
         </div>
+        @if ($message = Session::get('error'))
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    /* title: 'Oops...', */
+                    text: 'Username or Password Incorrect!',
+                    /*  footer: '<a href="">Why do I have this issue?</a>' */
+                });
+            </script>
+        @endif
+        @if (count($errors) > 0)
+            {{-- <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>Username or Password Incorrect</li>
+                @endforeach
+            </ul>
+        </div> --}}
+        @endif
+
+        <form id="form-validation" name="form-validation" method="POST" action="{{ route('login') }}">
+            @csrf
+            <label class="form-label">Username</label>
+            <input
+                style="border: none;border-bottom: 1px solid rgb(196, 196, 196);background: transparent;outline: none;height: 40px;color: #000;font-size: 16px;"
+                placeholder="Enter Username" name="username" type="text">
+            <label class="form-label">Password</label>
+            <input name="password" type="password" class="form-username"placeholder="Enter Password">
+            <div class="d-grid d-md-flex justify-content-md-center">
+                <button type="submit" value="Sign in" name="login">
+                    {{ __('Login') }}
+                </button>
+            </div>
+        </form>
     </div>
-</div>
-@endsection
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>
