@@ -31,12 +31,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    @can('manage_user')
+                    @if (Auth()->user()->role_id == 1)
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">จัดการผู้ใช้</a>
                         </li>
-                    @endcan
-
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link" href="#">Features</a>
                     </li>
