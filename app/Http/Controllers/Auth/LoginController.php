@@ -7,7 +7,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
+
 use Spatie\Permission\Models\Role;
 
 class LoginController extends Controller
@@ -61,65 +61,7 @@ class LoginController extends Controller
             foreach ($roles as $key => $item) {
                 Role::create($item);
             }
-            $permissions = [
-                [
-                    'name' => 'send'
-                ],
-                [
-                    'name' => 'edit_research'
-                ],
-                [
-                    'name' => 'cancel_research'
-                ],
-                [
-                    'name' => 'read_research'
-                ],
-                [
-                    'name' => 'manage_user'
-                ],
-                [
-                    'name' => 'add_director'
-                ],
-                [
-                    'name' => 'approve'
-                ],
-                [
-                    'name' => 'add_feed'
-                ],
-                [
-                    'name' => 'add_sum_feed'
-                ],
-                [
-                    'name' => 'edit_feed'
-                ],
-            ];
-            foreach ($permissions as $key => $value) {
-                Permission::create($value);
-            }
         }
-        $c_getR = DB::table('role_has_permissions')->count();
-        if ($c_getR == 0) {
-            //admin
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [4, 1]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [5, 1]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [6, 1]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [7, 1]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [8, 1]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [9, 1]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [10, 1]);
-
-            //users
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [1, 2]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [2, 2]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [3, 2]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [4, 2]);
-
-            //director
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [4, 3]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [8, 3]);
-            DB::insert('insert into role_has_permissions (permission_id, role_id) values (?, ?)', [10, 3]);
-        }
-
 
         if ($request->username != "" && $request->password != "") {
             $username = $request->username;
@@ -140,8 +82,9 @@ class LoginController extends Controller
                 $c_ad_role = DB::table('model_has_roles')->where('role_id', '=', '3')->where('model_id', '=', $user->employee_id)->count();
                 if ($c_ad_role == 0) {
                     DB::insert('insert into model_has_roles (role_id,model_type, model_id ) values (?, ?,?)', [3, '', $user->employee_id]);
+
+                    return view('director');
                 }
-                return view('director');
             } elseif ($user == null && $admin == null && $director != null) {
                 //director
                 $c_ad_role = DB::table('model_has_roles')->where('role_id', '=', '3')->where('model_id', '=', $director->employee_referees_id)->count();
